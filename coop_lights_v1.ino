@@ -28,7 +28,7 @@ void setup() {
   
 // Initialize DS3231
   clock.begin();
-  clock.setDateTime(__DATE__, __TIME__);    
+  //clock.setDateTime(__DATE__, __TIME__);    
   
   pinMode(relayPin, OUTPUT);
 }
