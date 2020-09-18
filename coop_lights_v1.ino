@@ -51,7 +51,7 @@ dt = clock.getDateTime();
 
 //hours of sunlight
  int MinOfNaturalLight = SunsetMin-SunriseMin;
- float HoursOfNaturalLight = MinOfNaturalLight/60;
+ float HoursOfNaturalLight = MinOfNaturalLight/60; //this is giving a whole number. needs to be fixed!!!
   
 
  
