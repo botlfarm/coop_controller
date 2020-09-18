@@ -17,10 +17,10 @@ int relayPin = 6;
 #include <Dusk2Dawn.h>
 
 //vatiable for hours of sunlight
-int MinutesOfLightNeeded=960; //16 hours
+int MinLightNeeded=960; //16 hours
 
 void setup() {
-  // set up the LCD's number of columns and rows:
+  // set up the LCD's number  columns and rows:
   lcd.begin(16, 2);
 
 // start serial display for troubleshooting
@@ -40,19 +40,22 @@ void loop()
 {
 dt = clock.getDateTime();
 
+//get sunrise/set minutes since midnight
   int SunriseMin = ashford.sunrise(dt.year, dt.month, dt.day, false);
   int SunsetMin = ashford.sunset(dt.year, dt.month, dt.day, false);
 
-//converting sinrise/set to actual time
+//converting Sunris/set minutes to actual time
   char SunriseTime[] = "00:00";
   Dusk2Dawn::min2str(SunriseTime, SunriseMin);
   char SunsetTime[] = "00:00";
   Dusk2Dawn::min2str(SunsetTime, SunsetMin);
 
-//hours of sunlight
- int MinOfNaturalLight = SunsetMin-SunriseMin;
- float HoursOfNaturalLight = MinOfNaturalLight/60; //this is giving a whole number. needs to be fixed!!!
-  
+//amount  Naural sunlight
+ int MinNaturalLight = SunsetMin-SunriseMin;
+ float HoursNaturalLight = MinNaturalLight/60; //this is giving a whole number. needs to be fixed!!!
+
+ //amoun  needed artificial light
+int MinArtificialLight = MinLightNeeded-MinNaturalLight;
 
  
 //print troublshooting data to serial
@@ -65,7 +68,8 @@ dt = clock.getDateTime();
   Serial.print(dt.second); Serial.println("");
   Serial.print("todays sunrise: "); Serial.print(SunriseMin);Serial.print(" or  "); Serial.print(SunriseTime); Serial.println("");
   Serial.print("todays sunset: "); Serial.print(SunsetMin);Serial.print(" or  "); Serial.print(SunsetTime); Serial.println("");
-  Serial.print("hours of natural light: ");Serial.print(HoursOfNaturalLight);Serial.println("");
+  Serial.print("hours  natural light: ");Serial.print(HoursNaturalLight);Serial.println("");
+  Serial.print("Min  Artificial light needed: ");Serial.print(MinArtificialLight);Serial.println("");
 
 //display current date, time, sunrise, sunset on lcd
   lcd.clear();
@@ -95,7 +99,7 @@ dt = clock.getDateTime();
   lcd.clear();
   lcd.print("Hours Nat Light");
   lcd.setCursor(0, 1);
-  lcd.print(HoursOfNaturalLight); 
+  lcd.print(HoursNaturalLight); 
   delay(4000);
 
 
