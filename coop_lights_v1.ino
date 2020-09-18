@@ -44,18 +44,21 @@ dt = clock.getDateTime();
   int SunriseMin = ashford.sunrise(dt.year, dt.month, dt.day, false);
   int SunsetMin = ashford.sunset(dt.year, dt.month, dt.day, false);
 
-//converting Sunris/set minutes to actual time
+//converting Sunris/set minutes to actual time 
   char SunriseTime[] = "00:00";
   Dusk2Dawn::min2str(SunriseTime, SunriseMin);
   char SunsetTime[] = "00:00";
   Dusk2Dawn::min2str(SunsetTime, SunsetMin);
 
+
 //amount  Naural sunlight
  int MinNaturalLight = SunsetMin-SunriseMin;
- float HoursNaturalLight = MinNaturalLight/60; //this is giving a whole number. needs to be fixed!!!
+ float HoursNaturalLight = MinNaturalLight/60; //this is giving a whole number. needs to be fixed
 
  //amoun  needed artificial light
 int MinArtificialLight = MinLightNeeded-MinNaturalLight;
+//need if statment here if no light is needed
+int StartLightMin = SunriseMin-MinArtificialLight;
 
  
 //print troublshooting data to serial
