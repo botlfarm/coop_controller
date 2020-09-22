@@ -1,11 +1,5 @@
 //note "min" in variables is for minutes not minimum
 
-// include the library code:
-#include <LiquidCrystal.h>
-
-// initialize the library with the numbers of the interface pins
-LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
-
 //needed for rtc
 #include <Wire.h>
 #include <DS3231.h>
@@ -22,13 +16,9 @@ int relayPin = 6;
 float MinLightNeeded=960; //16 hours
 
 void setup() {
-  // set up the LCD's number  columns and rows:
-  lcd.begin(16, 2);
 
 // start serial display for troubleshooting
   Serial.begin(9600);
-
- delay(4000);
   
 // Initialize DS3231
   clock.begin();
@@ -43,7 +33,6 @@ void setup() {
   pinMode(relayPin, OUTPUT);
 
 }
-
 
   
 void loop()
@@ -112,43 +101,6 @@ else {
   Serial.print("Start Light min since midnight: ");Serial.print(StartLightMin);Serial.println("");
   Serial.print("Minutes since midnight: ");Serial.print(MinSinceMid);Serial.println("");
   Serial.print("*****************************");Serial.println("");Serial.println("");
-
-  
-//display current date, time, sunrise, sunset on lcd
-  lcd.clear();
-  lcd.print("Current Date");
-  lcd.setCursor(0, 1);
-  lcd.print(dt.year);   lcd.print("-");
-  lcd.print(dt.month);  lcd.print("-");
-  lcd.print(dt.day);    lcd.print(" ");
-  delay(4000);
-  lcd.clear();
-  lcd.print("Current Time");
-  lcd.setCursor(0, 1);
-  lcd.print(dt.hour);   lcd.print(":");
-  lcd.print(dt.minute); lcd.print(":");
-  lcd.print(dt.second); 
-  delay(4000);
-  lcd.clear();
-  lcd.print("Sun Rise");
-  lcd.setCursor(0, 1);
-  lcd.print(SunriseTime); 
-  delay(4000);
-  lcd.clear();
-  lcd.print("Sun Set");
-  lcd.setCursor(0, 1);
-  lcd.print(SunsetTime); 
-  delay(4000);
-  lcd.clear();
-  lcd.print("Hours Nat Light");
-  lcd.setCursor(0, 1);
-  lcd.print(HoursNaturalLight); 
-  delay(4000);
-  lcd.clear();
-  lcd.print("Light Turns On");
-  lcd.setCursor(0, 1);
-  lcd.print(StartLightTime); 
-  delay(4000);
 
 
 }
