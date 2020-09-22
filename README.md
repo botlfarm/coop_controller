@@ -1,4 +1,4 @@
-# coop_lights_v1
+# coop_lights
 
 Still in progress
 
