@@ -1,3 +1,5 @@
+//This program will get todays sunrise and sunset, than calculate when to turn on the lights
+
 //note "min" in variables is for minutes not minimum
 
 //needed for rtc
