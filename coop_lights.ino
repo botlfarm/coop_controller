@@ -36,6 +36,7 @@ void setup() {
   pinMode(relayPin, OUTPUT);
 
   //test the relay configuration
+  Serial.print("*****************************"); Serial.println("");
   Serial.print("Chekcing if relay is working. Relay On 5 seconds"); Serial.println("");
   digitalWrite(relayPin, HIGH);
   delay(5000);
@@ -47,6 +48,7 @@ void setup() {
   delay(500);
   digitalWrite(relayPin, LOW);
   Serial.print("Chekck complete"); Serial.println(""); Serial.println("");
+  Serial.print("*****************************"); Serial.println("");
 
 }
 
@@ -56,18 +58,20 @@ void loop()
 
   //set location and utc time
   Dusk2Dawn ashford(41.9199, -72.1757, -4);
-  /*
-     working on this to get input form user for amount of hours requested
+
+     //working on this to get input form user for amount of hours requested
     // reply only when you receive data:
     if (Serial.available() > 0) {
       // read the incoming byte:
-      HoursLightNeeded = Serial.read();
+      HoursLightNeeded = Serial.parseInt();
 
       // say what you got:
-      Serial.print("Changing hours of light needed to :");Serial.println(HoursLightNeeded);Serial.print(" Hours");Serial.println("");
+      Serial.print("Changing hours of light needed to :");Serial.print(HoursLightNeeded);Serial.print(" Hours");Serial.println(""); //this needs to be minutes
 
+      Serial.end();
+      Serial.begin(9600);
     }
-  */
+
 
   dt = clock.getDateTime();
 
@@ -101,21 +105,14 @@ void loop()
   Dusk2Dawn::min2str(StartLightTime, StartLightMin);
 
   Serial.print("*****************************"); Serial.println("");
-  Serial.print("Current date and time: ");
-  Serial.print(dt.year);   Serial.print("-");
-  Serial.print(dt.month);  Serial.print("-");
-  Serial.print(dt.day);    Serial.print(" ");
-  Serial.print(dt.hour);   Serial.print(":");
-  Serial.print(dt.minute); Serial.print(":");
-  Serial.print(dt.second); Serial.println("");
-  Serial.print("Minutes since midnight: "); Serial.print(MinSinceMid); Serial.println("");
-  Serial.print("Todays sunrise: "); Serial.print(SunriseMin); Serial.print(" Minutes since sunrise, or  "); Serial.print(SunriseTime); Serial.println("");
-  Serial.print("Todays sunset: "); Serial.print(SunsetMin); Serial.print(" Minutes since sunrise, or  "); Serial.print(SunsetTime); Serial.println("");
-  Serial.print("Hours of natural light: "); Serial.print(HoursNaturalLight); Serial.println("");
-  Serial.print("Requested hours of sunlight:  "); Serial.print(MinLightNeeded / 60); Serial.println("");
-  Serial.print("Minutes of  artificial light needed: "); Serial.print(MinArtificialLight); Serial.println("");
-  Serial.print("Start light time: "); Serial.print(StartLightMin); Serial.print(" Minutes since sunrise, or  "); Serial.print(StartLightTime); Serial.println("");
-
+  Serial.print("Current date: "); Serial.print(dt.year);  Serial.print("-"); Serial.print(dt.month);  Serial.print("-"); Serial.print(dt.day); Serial.println("");
+  Serial.print("Current time: "); Serial.print(dt.hour);  Serial.print(":"); Serial.print(dt.minute); Serial.print(":"); Serial.print(dt.second);  Serial.print(" or "); Serial.print(MinSinceMid); Serial.print(" Minutes since sunrise");Serial.println("");
+  Serial.print("Todays sunrise: "); Serial.print(SunriseTime); Serial.print(" or ");Serial.print(SunriseMin); Serial.print(" minutes since midneight");Serial.println("");
+  Serial.print("Todays sunset: "); Serial.print(SunsetTime); Serial.print(" or ");Serial.print(SunsetMin); Serial.print(" minutes since midneight");Serial.println("");
+  Serial.print("Natural light: "); Serial.print(HoursNaturalLight); Serial.print(" hours, or "); Serial.print (MinNaturalLight);Serial.print( " minutes");Serial.println("");
+  Serial.print("Requested amount of sunlight:  "); Serial.print(HoursLightNeeded); Serial.print(" hours, or "); Serial.print (MinLightNeeded);Serial.print( " minutes");Serial.println("");
+  Serial.print("Artificial light needed: "); Serial.print(MinArtificialLight/60); Serial.print(" hours, or "); Serial.print (MinArtificialLight);Serial.print( " minutes");Serial.println("");
+  Serial.print("Start Artifical lights: "); Serial.print(StartLightTime); Serial.print(" or ");Serial.print(StartLightMin); Serial.print(" minutes since midneight");Serial.println("");
 
   if (MinArtificialLight <= 15) {   //If artifical light is neded for less than 15 min do nothing. make sure relay is off
     digitalWrite(relayPin, LOW);
@@ -133,6 +130,8 @@ void loop()
     digitalWrite(relayPin, LOW);
     Serial.print("It is before the artifical light needs to turn on"); Serial.println("");
   } //troubleshooting
+
+  Serial.print("Enter hours of sunlight required if you want to chane it");Serial.println("");
 
   Serial.print("*****************************"); Serial.println(""); Serial.println("");
 
