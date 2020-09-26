@@ -30,7 +30,7 @@ void setup() {
   //clock.setDateTime(__DATE__, __TIME__);
 
   //used for manually setting clock for testing
-  // clock.setDateTime(2020, 9, 18, 6, 31, 00);
+ //clock.setDateTime(2020, 10, 31, 1, 58, 00);
 
   //set relay pins
   pinMode(relayPin, OUTPUT);
