@@ -57,7 +57,7 @@ void loop()
 {
 
   //set location and utc time
-  Dusk2Dawn ashford(41.9199, -72.1757, -4);
+  Dusk2Dawn ashford(41.9199, -72.1757, -5);
 
   //get input form user for amount of hours requested
   // reply only when you receive data:
@@ -84,8 +84,8 @@ void loop()
   float MinSinceMid = dt.hour * (60) + dt.minute;
 
   //get sunrise/set minutes since midnight
-  float SunriseMin = ashford.sunrise(dt.year, dt.month, dt.day, false);
-  float SunsetMin = ashford.sunset(dt.year, dt.month, dt.day, false);
+  float SunriseMin = ashford.sunrise(dt.year, dt.month, dt.day, true);
+  float SunsetMin = ashford.sunset(dt.year, dt.month, dt.day, true);
 
   //converting Sunris/set minutes to actual time
   char SunriseTime[] = "00:00";
