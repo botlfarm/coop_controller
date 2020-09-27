@@ -8,6 +8,9 @@
 DS3231 clock;
 RTCDateTime dt;
 
+//for keeping variables in memory after power outge
+#include <EEPROM.h>
+
 //set output pins for relay
 int relayPin = 6;
 
@@ -18,6 +21,10 @@ int relayPin = 6;
 float MinLightNeeded = 960; //16 hours by default
 float HoursLightNeeded = 16; //16 hours by default
 
+//setup needed for DST button
+int buttonApin = 9;
+bool DSTStatus = false;
+
 void setup() {
 
   // start serial display for troubleshooting
@@ -26,15 +33,24 @@ void setup() {
   // Initialize DS3231
   clock.begin();
 
-  //this is to set the clock. ony run this once
+  //-----------initial set up only-------
+  //set the clock. It should be initally set to non DST time
+  
+  //this is to set the clock to computer time
   //clock.setDateTime(__DATE__, __TIME__);
+  
+  //used for manually setting clock if computer times is not right
+  //clock.setDateTime(2020, 10, 31, 1, 58, 00);
 
-  //used for manually setting clock for testing
-  // clock.setDateTime(2020, 9, 18, 6, 31, 00);
+  //set the initla state of the DSTStatus in eeprom
+  //EEPROM.update(0, DSTStatus);
 
   //set relay pins
   pinMode(relayPin, OUTPUT);
 
+  //set up DST button
+  pinMode(buttonApin, INPUT_PULLUP);
+/*
   //test the relay configuration
   Serial.print("*****************************"); Serial.println("");
   Serial.print("Checking if relay is working. Relay On 5 seconds"); Serial.println("");
@@ -44,21 +60,24 @@ void setup() {
   digitalWrite(relayPin, LOW);
   delay(5000);
   Serial.print("Flash relay"); Serial.println("");
+    */
   digitalWrite(relayPin, HIGH);
   delay(500);
   digitalWrite(relayPin, LOW);
-  Serial.print("Relay check complete"); Serial.println(""); Serial.println("");
-  Serial.print("*****************************"); Serial.println("");
+  Serial.print("Relay check complete"); Serial.println("");
+  Serial.print("*****************************"); Serial.println("");Serial.println("");
   delay(1000);
+
+  //check stored DST state on EEPROM using function defined at the end of the code
+  checkDSTStatus(); 
 }
 
 
 void loop()
 {
-
-  //set location and utc time
+//set location and utc time
   Dusk2Dawn ashford(41.9199, -72.1757, -5);
-
+  
   //get input form user for amount of hours requested
   // reply only when you receive data:
   if (Serial.available() > 0) {
@@ -69,8 +88,9 @@ void loop()
 
     // display new light requested time:
     Serial.print("++++++++++++++++++++++++++++++"); Serial.println("");
-    Serial.print("Changing minutes of light needed to :"); Serial.print(MinLightNeeded); Serial.print(" minutes, or "); Serial.print(HoursLightNeeded); Serial.print(" hours ");Serial.println(""); 
+    Serial.print("Changing minutes of light needed to: "); Serial.print(MinLightNeeded); Serial.print(" minutes, or "); Serial.print(HoursLightNeeded); Serial.print(" hours ");Serial.println(""); 
     Serial.print("++++++++++++++++++++++++++++++"); Serial.println("");Serial.println("");
+    delay(2000);
     
     //// reset the serial monitor to clear data
     Serial.end();
@@ -84,15 +104,14 @@ void loop()
   float MinSinceMid = dt.hour * (60) + dt.minute;
 
   //get sunrise/set minutes since midnight
-  float SunriseMin = ashford.sunrise(dt.year, dt.month, dt.day, true);
-  float SunsetMin = ashford.sunset(dt.year, dt.month, dt.day, true);
+  float SunriseMin = ashford.sunrise(dt.year, dt.month, dt.day, DSTStatus);
+  float SunsetMin = ashford.sunset(dt.year, dt.month, dt.day, DSTStatus);
 
   //converting Sunris/set minutes to actual time
   char SunriseTime[] = "00:00";
   Dusk2Dawn::min2str(SunriseTime, SunriseMin);
   char SunsetTime[] = "00:00";
   Dusk2Dawn::min2str(SunsetTime, SunsetMin);
-
 
   //amount  Naural sunlight
   float MinNaturalLight = SunsetMin - SunriseMin;
@@ -109,6 +128,14 @@ void loop()
   Serial.print("*****************************"); Serial.println("");
   Serial.print("Current date: "); Serial.print(dt.year);  Serial.print("-"); Serial.print(dt.month);  Serial.print("-"); Serial.print(dt.day); Serial.println("");
   Serial.print("Current time: "); Serial.print(dt.hour);  Serial.print(":"); Serial.print(dt.minute); Serial.print(":"); Serial.print(dt.second);  Serial.print(" or "); Serial.print(MinSinceMid); Serial.print(" minutes since midnight"); Serial.println("");
+  Serial.print("DST Status: "); 
+   if(DSTStatus == 1) {
+    Serial.print ("We are in Daylight Savings Time");
+   } 
+   if(DSTStatus == 0) {
+    Serial.print ("We are not in Daylight Savings Time");
+   }
+  Serial.println("");
   Serial.print("Todays sunrise: "); Serial.print(SunriseTime); Serial.print(" or "); Serial.print(SunriseMin); Serial.print(" minutes since midnight"); Serial.println("");
   Serial.print("Todays sunset: "); Serial.print(SunsetTime); Serial.print(" or "); Serial.print(SunsetMin); Serial.print(" minutes since midnight"); Serial.println("");
   Serial.print("Natural light: "); Serial.print(HoursNaturalLight); Serial.print(" hours, or "); Serial.print (MinNaturalLight); Serial.print( " minutes"); Serial.println("");
@@ -133,10 +160,61 @@ void loop()
     Serial.print("It is before the artifical light needs to turn on"); Serial.println("");
   }
 
+  Serial.print("*****************************"); Serial.println("");
+  Serial.print("Press and hold button to toggle DST"); Serial.println("");
   Serial.print("Enter minutes of sunlight required if you want to chane it"); Serial.println("");
+  Serial.print("720=12h, 780=13h, 840=14h, 900=15h, 960=16h"); Serial.println("");
   Serial.print("*****************************"); Serial.println(""); Serial.println("");
 
   delay(15000);
+  
+if (digitalRead(buttonApin) == LOW && DSTStatus==false)
+    {
+      Serial.print("++++++++++++++++++++++++++++++");Serial.println("");
+      Serial.print("DST changed to "); 
+      DSTStatus = true;
+      EEPROM.update(0, DSTStatus);
+      Serial.print(DSTStatus); Serial.println("");
+      Serial.print("++++++++++++++++++++++++++++++"); Serial.println("");Serial.println("");
 
+       //get the current time form the RTC
+       dt = clock.getDateTime();
 
+       //Set the clock 
+       clock.setDateTime(dt.year, dt.month, dt.day, dt.hour+1, dt.minute, dt.second);
+        
+       delay(2000);
+    }
+  else if (digitalRead(buttonApin) == LOW && DSTStatus==true)
+    {
+      Serial.print("++++++++++++++++++++++++++++++"); Serial.println("");
+      Serial.print("DST changing to "); 
+      DSTStatus = false;
+      EEPROM.update(0, DSTStatus);
+      Serial.print(DSTStatus); Serial.println("");
+      Serial.print("++++++++++++++++++++++++++++++"); Serial.println("");Serial.println("");
+
+       //get the current time form the RTC
+       dt = clock.getDateTime();
+
+       //Set the clock 
+       clock.setDateTime(dt.year, dt.month, dt.day, dt.hour-1, dt.minute, dt.second);
+              
+      delay(2000);
+    }
+
+}
+
+void checkDSTStatus() {
+  Serial.print("-------------------------------"); Serial.println("");
+   Serial.print("DST status after restart: ");
+   DSTStatus = EEPROM.read(0);
+   if(DSTStatus == 1) {
+    Serial.println ("true");
+   } 
+   if(DSTStatus == 0) {
+    Serial.println ("false");
+   }
+   Serial.print("-------------------------------"); Serial.println("");Serial.println("");
+   delay(2000);
 }
