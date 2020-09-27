@@ -1,13 +1,12 @@
 # coop_lights
 
-Still in progress
-
 Intention is to coltrol a chicken coop light to increses egg production. 
 
 Materials:
 Arduino Mega 2560
 ds1307 RTC
 Relay Board
+momentary switch
 
 This will get current sunrise and sun set times based on date and coordinate location (location is hard prograed in code)
 
