@@ -123,7 +123,7 @@ void buttonPush() {
   else if (digitalRead(buttonApin) == LOW && DSTStatus == false)
   {
     Serial.println("++++++++++++++++++++++++++++++");
-    Serial.print("DST enabled");
+    Serial.println("DST enabled");
     DSTStatus = true;
     EEPROM.update(0, DSTStatus);
     Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
@@ -135,7 +135,7 @@ void buttonPush() {
   else if (digitalRead(buttonApin) == LOW && DSTStatus == true)
   {
     Serial.println("++++++++++++++++++++++++++++++");
-    Serial.print("DST disabled ");
+    Serial.println("DST disabled ");
     DSTStatus = false;
     EEPROM.update(0, DSTStatus);
     Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
@@ -225,7 +225,7 @@ void requestInput()
 {
   Serial.println("*****************************");
   Serial.println("Press and hold button to toggle DST");
-  Serial.println("Enter minutes of sunlight required if you want to chane it");
+  Serial.println("Enter minutes of sunlight required if you want to change it");
   Serial.println("720=12h, 780=13h, 840=14h, 900=15h, 960=16h");
   Serial.println("*****************************"); Serial.println("");
 }
