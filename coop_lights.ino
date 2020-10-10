@@ -1,7 +1,5 @@
 //This program will get todays sunrise and sunset, than calculate when to turn on the lights
 
-//note "min" in variables is for minutes not minimum
-
 #include <Wire.h>  //needed for RTC Library to function
 #include <DS3231.h> //RTC library
 #include <EEPROM.h>  //for keeping variables in memory after power outge
@@ -10,40 +8,60 @@
 DS3231 clock;
 RTCDateTime dt;
 
-int relayPin = 6; //define relay pin
-int buttonApin = 9;  //define DST button pin
+int relayPin1 = 6; //define relay pin
+int relayPin2 = 5; //define relay pin
+int relayPin3 = 4; //define relay pin
+int relayPin4 = 3; //define relay pin
+int Button1Pin = 9;  //define DST button pin
 
-float MinLightNeeded;
-float HoursLightNeeded;
-bool DSTStatus = false;
-char DSTStatusWords[36];
-float MinSinceMid;
-float SunriseMin;
-float SunsetMin;
-char SunriseTime[] = "00:00";
-char SunsetTime[] = "00:00";
-float MinNaturalLight;
-float HoursNaturalLight;
-float MinArtificialLight;
-float StartLightMin;
-char StartLightTime[] = "00:00";
+float MinLightNeeded; //total minutes of light needed
+float HoursLightNeeded; //total hours of light needed
+bool DSTStatus = false; //the status of DST. 
+char DSTStatusWords[36]; //converting the DST status into actual words
+float MinSinceMid; //minutes since midnight
+float SunriseMin; //sunrise in minutes since midnight
+float SunsetMin; //sunset in minutes since midnight
+char SunriseTime[] = "00:00"; //sunrise in readable time
+char SunsetTime[] = "00:00"; //sunset in redable time
+float MinNaturalLight; //minutes of natural sunlight
+float HoursNaturalLight; //hours of naturl sunlight
+float MinArtificialLight; //minutes of artifical light
+float StartLightMin; //how many minutes after midnight to turn on the lights
+char StartLightTime[] = "00:00"; //the time the lights turn on
+float OpenDoorOffset=30; //the amount of minutes offset from sunries to open the door
+float CloseDoorOffset=30; //the amount of miuntes offset from sunset to close the door
+float OpenDoorMin; //minutes since midnight the door will open
+char OpenDoorTime[] = "00:00"; //time the door opens
+float CloseDoorMin; //Minutes since midnight the door will close
+char CloseDoorTime[] = "00:00"; //time the door closes
+//float maxChangeperday = 10; //max minutes of daylight change per day
+//float currentTotalLight;  //current amount of total light
 
 Dusk2Dawn ashford(41.9199, -72.1757, -5); //set location and utc time
 
 void setup()
 {
-  Serial.begin(9600); //start serial display for troubleshooting
+  pinMode(relayPin1, OUTPUT); //set relay pin
+  pinMode(relayPin2, OUTPUT); //set relay pin
+  pinMode(relayPin3, OUTPUT); //set relay pin
+  pinMode(relayPin4, OUTPUT); //set relay pin
+  digitalWrite(relayPin1, HIGH);
+  digitalWrite(relayPin2, HIGH);
+  digitalWrite(relayPin3, HIGH);
+  digitalWrite(relayPin4, HIGH);
+  pinMode(Button1Pin, INPUT_PULLUP); //set up DST button pin
+
+  Serial.begin(9600); //start serial display 
   clock.begin(); //Initialize DS3231
 
   initialSetup(); //only need to use this at initial setup or reprograming the RTC. Uncomment nesicary parts at initialSetup function
 
-  pinMode(relayPin, OUTPUT); //set relay pin
-  pinMode(buttonApin, INPUT_PULLUP); //set up DST button pin
-
-  relayCheck(); //check to see if relays are working
+  lightCheck(); //check to see if relays are working
+  doorCheck(); //check to see if actuator is working
   Serial.println("-------------------------------");
-  checkLightNeededStatus(); //check for stored minutes of needed light
-  checkDSTStatus(); //check stored DST state on EEPROM using function defined at the end of the code
+  checkLightNeededStatus(); //check for stored minutes of needed light on EEPROM
+  checkDSTStatus(); //check stored DST state on EEPROM
+  //checkCurrentTotalLight(); //check stored current total light on EEPROM
   Serial.println("-------------------------------"); Serial.println("");
   delay(4000);
 }
@@ -53,9 +71,18 @@ void loop()
   buttonPush();  //see if DST putton is being pushed
   incomingSerialData();  //get input form user for amount of hours requested
   dt = clock.getDateTime(); //get the current time form the RTC
-  doMath();  //all the calcualtions
-  printStatus();  //display the calculations
-  controlRelay();  //turn the relay on and off as necisary
+  doGeneralMath(); //all the universal calculations.
+  doLightMath();  //all the lighting calcualtions
+  doDoorMath(); //all the door calculations
+  Serial.println("*****************************");
+  printGeneralStatus(); //display the time and stuff
+  Serial.println("");
+  printLightStatus(); //Print light stuff
+  Serial.println("");
+  printDoorStatus(); //Print door stuff
+  Serial.println("*****************************");
+  controlLight(); //turn the relay on and off as necisary
+  controlDoor(); //open or close the door
   requestInput(); //prompt user for putton press or serial input
   delay(15000);
 }
@@ -78,23 +105,45 @@ void initialSetup()
   //EEPROM.put(1, MinLightNeeded);
 }
 
-void relayCheck()
+void lightCheck()
 {
-  //test the relay configuration
   Serial.println("*****************************");
-  Serial.println("Checking if relay is working. Relay On 5 seconds");
-  digitalWrite(relayPin, HIGH);
-  delay(5000);
-  Serial.println("Relay off 5 seconds");
-  digitalWrite(relayPin, LOW);
-  delay(5000);
-  Serial.println("Flash relay");
-  digitalWrite(relayPin, HIGH);
-  delay(500);
-  digitalWrite(relayPin, LOW);
-  Serial.println("Relay check complete");
-  Serial.println("*****************************"); Serial.println("");
+  Serial.println("Checking if lights are working.");
   delay(1000);
+  Serial.println("Light on 3 seconds");
+  digitalWrite(relayPin1, LOW);
+  delay(3000);
+  Serial.println("Lights off 3 seconds");
+  digitalWrite(relayPin1, HIGH);
+  delay(3000);
+  Serial.println("Flash lights");
+  digitalWrite(relayPin1, LOW);
+  delay(1000);
+  digitalWrite(relayPin1, HIGH);
+  delay(500);
+  Serial.println("Light check complete");
+  Serial.println("*****************************"); Serial.println("");
+  delay(2000);
+}
+
+void doorCheck() 
+{
+  Serial.println("*****************************");
+  Serial.println("Checking if door is working.");
+  delay(1000);
+  Serial.println("Close for 3 seconds");
+  closeDoor();
+  delay(3000);
+  Serial.println("Stop door for 3 seconds");
+  stopDoor();
+  delay(3000);
+  Serial.println("Open door for 3 seconds");
+  openDoor();
+  delay(3000);
+  stopDoor();
+  Serial.println("Door check complete");
+  Serial.println("*****************************"); Serial.println("");
+  delay(2000);
 }
 
 void checkLightNeededStatus() {
@@ -110,17 +159,25 @@ void checkDSTStatus()
   DSTStatus = EEPROM.read(0);
   DSTStatusToWords();
 }
+/*
+void checkCurrentTotalLight()
+{
+  Serial.print("Current total light after restart: ");
+  EEPROM.get(4, currentTotalLight);
+  Serial.println(currentTotalLight);
+}
+*/
 
 void buttonPush() {
 
-  if (digitalRead(buttonApin) == LOW && MinSinceMid < 61) //cant change the DST status if it is earlier than 1am. this will give a negative number to the clock
+  if (digitalRead(Button1Pin) == LOW && MinSinceMid < 61) //cant change the DST status if it is earlier than 1am. this will give a negative number to the clock
   {
     Serial.println("++++++++++++++++++++++++++++++");
     Serial.println("Wait until after 1 am to change the DST staus");
     Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
   }
 
-  else if (digitalRead(buttonApin) == LOW && DSTStatus == false)
+  else if (digitalRead(Button1Pin) == LOW && DSTStatus == false)
   {
     Serial.println("++++++++++++++++++++++++++++++");
     Serial.println("DST enabled");
@@ -132,7 +189,7 @@ void buttonPush() {
     clock.setDateTime(dt.year, dt.month, dt.day, dt.hour + 1, dt.minute, dt.second);  //Set the clock
     delay(2000);
   }
-  else if (digitalRead(buttonApin) == LOW && DSTStatus == true)
+  else if (digitalRead(Button1Pin) == LOW && DSTStatus == true)
   {
     Serial.println("++++++++++++++++++++++++++++++");
     Serial.println("DST disabled ");
@@ -164,7 +221,8 @@ void incomingSerialData()
     Serial.begin(9600);
   }
 }
-void doMath()
+
+void doGeneralMath ()
 {
   MinSinceMid = dt.hour * (60) + dt.minute; //calculate current time in minutes since midnight
 
@@ -173,7 +231,10 @@ void doMath()
 
   Dusk2Dawn::min2str(SunriseTime, SunriseMin); //converting Sunrise minutes to actual time
   Dusk2Dawn::min2str(SunsetTime, SunsetMin); //converting Sunset minutes to actual time
+}
 
+void doLightMath()
+{
   MinNaturalLight = SunsetMin - SunriseMin; //amount of naural sunlight minutes
   HoursNaturalLight = MinNaturalLight / 60; //amount of naural sunlight hours
 
@@ -183,41 +244,75 @@ void doMath()
   Dusk2Dawn::min2str(StartLightTime, StartLightMin); //convert minutes to string
 }
 
-void printStatus()
+void doDoorMath()
 {
-  Serial.println("*****************************");
+  OpenDoorMin = SunriseMin + OpenDoorOffset; //calculate door open time in minutes since midnight
+  Dusk2Dawn::min2str(OpenDoorTime, OpenDoorMin); //convert minutes to string
+
+  CloseDoorMin = SunsetMin + CloseDoorOffset; //calculate door open time in minutes since midnight
+  Dusk2Dawn::min2str(CloseDoorTime, CloseDoorMin); //convert minutes to string
+}
+
+void printGeneralStatus()
+{
   Serial.print("Current date: "); Serial.print(dt.year);  Serial.print("-"); Serial.print(dt.month);  Serial.print("-"); Serial.println(dt.day);
   Serial.print("Current time: "); Serial.print(dt.hour);  Serial.print(":"); Serial.print(dt.minute); Serial.print(":"); Serial.print(dt.second);  Serial.print(" or "); Serial.print(MinSinceMid); Serial.println(" minutes since midnight");
   Serial.print("DST Status: "); DSTStatusToWords();
   Serial.print("Todays sunrise: "); Serial.print(SunriseTime); Serial.print(" or "); Serial.print(SunriseMin); Serial.println(" minutes since midnight");
   Serial.print("Todays sunset: "); Serial.print(SunsetTime); Serial.print(" or "); Serial.print(SunsetMin); Serial.println(" minutes since midnight");
+}
+
+void printLightStatus()
+{
   Serial.print("Natural light: "); Serial.print(HoursNaturalLight); Serial.print(" hours, or "); Serial.print (MinNaturalLight); Serial.println( " minutes");
   Serial.print("Requested amount of sunlight:  "); Serial.print(HoursLightNeeded); Serial.print(" hours, or "); Serial.print (MinLightNeeded); Serial.println( " minutes");
   Serial.print("Artificial light needed: "); Serial.print(MinArtificialLight / 60); Serial.print(" hours, or "); Serial.print (MinArtificialLight); Serial.println( " minutes");
   Serial.print("Start Artifical lights: "); Serial.print(StartLightTime); Serial.print(" or "); Serial.print(StartLightMin); Serial.println(" minutes since midnight");
 }
 
-void controlRelay()
+void printDoorStatus()
 {
-  if (MinArtificialLight <= 15) //If artifical light is neded for less than 15 min do nothing. make sure relay is off
+  Serial.print("Door Open offset from sunrise: "); Serial.print(OpenDoorOffset); Serial.println(" minutes ");
+  Serial.print("Door Open Time: "); Serial.print(OpenDoorTime); Serial.print(" or "); Serial.print(OpenDoorMin); Serial.println(" minutes since midnight");
+  Serial.print("Door Open offset from sunrise: "); Serial.print(CloseDoorOffset); Serial.println(" minutes ");
+  Serial.print("Door Close Time: "); Serial.print(CloseDoorTime); Serial.print(" or "); Serial.print(CloseDoorMin); Serial.println(" minutes since midnight");
+}
+
+void controlLight()
+{
+  if (MinArtificialLight <= 20) //If artifical light is neded for less than 20 min do nothing. make sure relay is off
   {
-    digitalWrite(relayPin, LOW);
-    Serial.println("Less than 15 minutes of artificial light is needed");
+    digitalWrite(relayPin1, HIGH);
+    Serial.println("Less than 20 minutes of artificial light is needed. Lights should be off.");
   }
-  else if (MinSinceMid > SunriseMin + 15) //is the current time is later than sunrise plus 15 minutesthan turn off relay
+  else if (MinSinceMid > SunriseMin + 20) //if the current time is later than sunrise plus 20 minutes than turn off relay
   {
-    digitalWrite(relayPin, LOW);
-    Serial.println("It is later than 15 minutes after sunrise");
+    digitalWrite(relayPin1, HIGH);
+    Serial.println("It is later than 20 minutes after sunrise. Lights should be off.");
   }
   else if (MinSinceMid >= StartLightMin) //if the current time is later than turn light on time than turn the light on
   {
-    digitalWrite(relayPin, HIGH);
-    Serial.println("It is before 15 minutes after sunrise and the artifical light should be on");
+    digitalWrite(relayPin1, LOW);
+    Serial.println("It is before 20 minutes after sunrise and the artifical light should be on");
   }
   else
   {
-    digitalWrite(relayPin, LOW);
-    Serial.println("It is before the artifical light needs to turn on");
+    digitalWrite(relayPin1, HIGH);
+    Serial.println("It is before the artifical light needs to turn on. Lights should be off.");
+  }
+}
+
+void controlDoor()
+{
+  if (MinSinceMid > OpenDoorMin && MinSinceMid < CloseDoorMin)
+  {
+    openDoor();
+    Serial.println("The door should be open.");
+  }
+  else
+  {
+    closeDoor();
+    Serial.println("The door should be closed.");
   }
 }
 
@@ -238,4 +333,22 @@ void DSTStatusToWords()
   if (DSTStatus == 0) {
     Serial.println ("We are not in Daylight Savings Time");
   }
+}
+
+void closeDoor() 
+{
+    digitalWrite(relayPin2, LOW);
+    digitalWrite(relayPin3, HIGH);
+}
+
+void openDoor() 
+{
+    digitalWrite(relayPin2, HIGH);
+    digitalWrite(relayPin3, LOW);
+}
+
+void stopDoor() 
+{
+    digitalWrite(relayPin2, HIGH);
+    digitalWrite(relayPin3, HIGH);
 }
