@@ -9,7 +9,7 @@ void doorMenu()
   Serial.println("4-Manual operation");
   Serial.println("*****************************"); Serial.println("");
   delay(MenuTimeout);
-  
+
   if (Serial.available() > 0) // reply only when you receive data:
   {
     SerialData = Serial.parseInt();
@@ -24,7 +24,11 @@ void doorMenu()
     }
     else if (SerialData == 3)
     {
-      doorAutoToggle();
+      incomingDoorMode();
+    }
+    else if (SerialData == 4)
+    {
+      manualDoorControl();
     }
     else
     {
@@ -46,7 +50,7 @@ void incomingSerialOpenOffset()
     if (SerialData > -240 && SerialData < 240)
     {
       OpenDoorOffset = SerialData; // read the incoming byte:
-      //EEPROM.put(1, MinLightNeeded);
+      EEPROM.put(30, OpenDoorOffset);
 
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.print("Changing open door offset from sunrise to: "); Serial.print(OpenDoorOffset); Serial.println(" minutes");
@@ -74,7 +78,7 @@ void incomingSerialCloseOffset()
     if (SerialData > -240 && SerialData < 240)
     {
       CloseDoorOffset = SerialData; // read the incoming byte:
-      //EEPROM.put(1, MinLightNeeded);
+      EEPROM.put(35, CloseDoorOffset);
 
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.print("Changing close door offset from sunset to: "); Serial.print(CloseDoorOffset); Serial.println(" minutes");
@@ -91,11 +95,54 @@ void incomingSerialCloseOffset()
   }
 }
 
-void doorAutoToggle()
+void incomingDoorMode()
 {
-  Serial.print("Door Mode: "); //DSTStatusToWords();
-  Serial.println("Enter 1 for automatic door and 0 for manual door");
-  // reset the serial monitor to clear data
+  DoorModeStatusToWords();
+  Serial.println("*****************************");
+  Serial.println("Door Mode Menu. Enter number in Serial Monitor");
+  Serial.println("1-Enable automatic door mode");
+  Serial.println("2-disable automatic door mode");
+  Serial.println("*****************************"); Serial.println("");
+
+  if (Serial.available() > 0) // reply only when you receive data:
+  {
+    SerialData = Serial.parseInt();
+    if (SerialData == 1)
+    {
+      Serial.println("++++++++++++++++++++++++++++++");
+      Serial.println("Automaic door mode enabled");
+      DoorModeStatus = true;
+      EEPROM.update(20, DoorModeStatus);
+      Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
+      resetSerial();
+    }
+    else if (SerialData == 2)
+    {
+      Serial.println("++++++++++++++++++++++++++++++");
+      Serial.println("Automatic door mode disabled");
+      DoorModeStatus = false;
+      EEPROM.update(20, DoorModeStatus);
+      Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
+      resetSerial();
+    }
+    else
+    {
+      Serial.println("Invalid entry. Serial reads this");
+      Serial.println(SerialData);
+      Serial.println("Back to main menu");
+      resetSerial();
+    }
+  }
+}
+
+void manualDoorControl()
+{
+  Serial.println("*****************************");
+  Serial.println("Mnual Door Menu. Enter number in Serial Monitor");
+  Serial.println("1-Open Door");
+  Serial.println("2-Close Door");
+  Serial.println("3-Stop Door");
+  Serial.println("*****************************"); Serial.println("");
   resetSerial();
   
   if (Serial.available() > 0) // reply only when you receive data:
@@ -103,19 +150,21 @@ void doorAutoToggle()
     SerialData = Serial.parseInt();
     if (SerialData == 1)
     {
-      Serial.println("++++++++++++++++++++++++++++++");
-      Serial.println("Automatic door mode");
-      //DSTStatus = true;
-      //EEPROM.update(0, DSTStatus);
-      Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
+      openDoor();
+      DoorStatusToWords();
+      resetSerial();
     }
-    else if (SerialData == 0)
+    else if (SerialData == 2)
     {
-      Serial.println("++++++++++++++++++++++++++++++");
-      Serial.println("Manual door mode");
-      //DSTStatus = false;
-      //EEPROM.update(0, DSTStatus);
-      Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
+      closeDoor();
+      DoorStatusToWords();
+      resetSerial();
+    }
+    else if (SerialData == 3)
+    {
+      stopDoor();
+      Serial.println("Door Stoped");
+      resetSerial();
     }
     else
     {

@@ -25,7 +25,7 @@ void mainMenu()
     }
     else if (SerialData == 3)
     {
-      incomingSerialDSTToggle();
+      setupMenu();
     }
     else
     {

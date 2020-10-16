@@ -64,7 +64,11 @@ void incomingSerialLightNeeded()
 void incomingLightMode()
 {
   LightModeStatusToWords();
-  Serial.println("Enter 1 to enable suplimneted light and 0 to disable suplimented light");
+  Serial.println("*****************************");
+  Serial.println("Light Mode Menu. Enter number in Serial Monitor");
+  Serial.println("1-Enable Suplimental light mode");
+  Serial.println("2-Disable suplimental light mode");
+  Serial.println("*****************************"); Serial.println("");
   resetSerial();
   
   if (Serial.available() > 0) // reply only when you receive data:

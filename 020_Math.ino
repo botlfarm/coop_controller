@@ -49,3 +49,23 @@ void LightModeStatusToWords()
     Serial.println ("Suplimneted light mode disabled");
   }
 }
+
+void DoorModeStatusToWords()
+{
+  if (DoorModeStatus == 1) {
+    Serial.println ("Automatic door mode enabled");
+  }
+  if (DoorModeStatus == 0) {
+    Serial.println ("Automatic door mode disabled");
+  }
+}
+
+void DoorStatusToWords()
+{
+  if (DoorStatus == 1) {
+    Serial.println ("The door should be open");
+  }
+  if (DoorStatus == 0) {
+    Serial.println ("The door should be closed");
+  }
+}

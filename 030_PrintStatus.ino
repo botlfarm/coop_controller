@@ -5,11 +5,11 @@ void printGeneralStatus()
   DSTStatusToWords();
   Serial.print("Sunrise: "); Serial.println(SunriseTime); 
   Serial.print("Sunset: "); Serial.println(SunsetTime); 
+  Serial.print("Natural light: "); Serial.print(HoursNaturalLight); Serial.print(" hours, or "); Serial.print (MinNaturalLight); Serial.println( " minutes");
 }
 
 void printLightStatus()
 {
-  Serial.print("Natural light: "); Serial.print(HoursNaturalLight); Serial.print(" hours, or "); Serial.print (MinNaturalLight); Serial.println( " minutes");
   LightModeStatusToWords();
   Serial.print("Requested amount of total light:  "); Serial.print(HoursLightNeeded); Serial.print(" hours, or "); Serial.print (MinLightNeeded); Serial.println( " minutes");
   Serial.print("Artificial light needed: "); Serial.print(MinArtificialLight / 60); Serial.print(" hours, or "); Serial.print (MinArtificialLight); Serial.println( " minutes");
@@ -18,6 +18,8 @@ void printLightStatus()
 
 void printDoorStatus()
 {
+  DoorModeStatusToWords();
+  DoorStatusToWords();
   Serial.print("Door Open offset from sunrise: "); Serial.print(OpenDoorOffset); Serial.println(" minutes ");
   Serial.print("Door Open Time: "); Serial.println(OpenDoorTime);
   Serial.print("Door Close offset from sunset: "); Serial.print(CloseDoorOffset); Serial.println(" minutes ");
