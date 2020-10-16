@@ -1,5 +1,17 @@
 void controlLight()
 {
+ if (LightModeStatus==1)
+  {
+    autoLightControlMode();
+  }
+ else if (LightModeStatus==0)
+ {
+  Serial.println("Suplimental light mode disabled");
+ }
+}
+
+void autoLightControlMode()
+{
   if (MinArtificialLight <= 20) //If artifical light is neded for less than 20 min do nothing. make sure relay is off
   {
     digitalWrite(relayPin1, HIGH);

@@ -4,7 +4,7 @@ void requestInput()
   Serial.println("Menu. Enter number in Serial Monitor");
   Serial.println("1-lighting");
   Serial.println("2-door");
-  Serial.println("3-time");
+  Serial.println("3-setup");
   Serial.println("*****************************"); Serial.println("");
 }
 
@@ -17,7 +17,7 @@ void mainMenu()
 
     if (SerialData == 1)
     {
-      incomingSerialLightNeeded();
+      lightMenu();
     }
     else if (SerialData == 2)
     {

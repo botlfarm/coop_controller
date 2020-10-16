@@ -39,3 +39,13 @@ void DSTStatusToWords()
     Serial.println ("We are not in Daylight Savings Time");
   }
 }
+
+void LightModeStatusToWords()
+{
+  if (LightModeStatus == 1) {
+    Serial.println ("Suplimneted light mode enabled");
+  }
+  if (LightModeStatus == 0) {
+    Serial.println ("Suplimneted light mode disabled");
+  }
+}

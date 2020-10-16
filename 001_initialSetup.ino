@@ -9,9 +9,14 @@ void initialSetup()
   //clock.setDateTime(2020, 10, 31, 1, 58, 00);
 
   //set the initla state of the DSTStatus in eeprom, uncomment the next 1 line
-  //EEPROM.update(0, DSTStatus);  //set DSTStatus to true if it is Daylight Savings Time or false if it is Standard time
+  DSTStatus = true; //set DSTStatus to true if it is Daylight Savings Time or false if it is Standard time
+  EEPROM.update(0, DSTStatus);  
 
   //set the initla amount of light needed, uncomment next 2 lines
-  //MinLightNeeded = 960;  // set this ro the number of minutes you want of light
-  //EEPROM.put(1, MinLightNeeded);
+  MinLightNeeded = 960;  // set this ro the number of minutes you want of light
+  EEPROM.put(5, MinLightNeeded);
+
+  //set the initla amount of light needed, uncomment next 2 lines
+  LightModeStatus = true;  //set LightModeStatus to true if to enble suplimental light mode or false to disable 
+  EEPROM.put(10, LightModeStatus);
 }

@@ -6,6 +6,7 @@ void doorMenu()
   Serial.println("1-Open Offset");
   Serial.println("2-Close Offset");
   Serial.println("3-Toggle Manual/Automatic");
+  Serial.println("4-Manual operation");
   Serial.println("*****************************"); Serial.println("");
   delay(MenuTimeout);
   

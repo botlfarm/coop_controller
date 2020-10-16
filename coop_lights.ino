@@ -16,6 +16,8 @@ float MinLightNeeded; //total minutes of light needed
 float HoursLightNeeded; //total hours of light needed
 bool DSTStatus = false; //the status of DST.
 char DSTStatusWords[36]; //converting the DST status into actual words
+bool LightModeStatus = false; //the status of light mode
+char LightModeStatusStatusWords[36]; //converting the DST status into actual words
 float MinSinceMid; //minutes since midnight
 float SunriseMin; //sunrise in minutes since midnight
 float SunsetMin; //sunset in minutes since midnight
@@ -54,28 +56,27 @@ void setup()
   Serial.begin(9600); //start serial display
   clock.begin(); //Initialize DS3231
 
-  initialSetup(); //only need to use this at initial setup or reprograming the RTC. Uncomment nesicary parts at initialSetup function
+  //initialSetup(); //only need to use this at initial setup or reprograming the RTC. Uncomment nesicary parts at initialSetup function
 
   //lightCheck(); //check to see if relays are working
   //doorCheck(); //check to see if actuator is working
   Serial.println("-------------------------------");
-  checkLightNeededStatus(); //check for stored minutes of needed light on EEPROM
-  checkDSTStatus(); //check stored DST state on EEPROM
-  //checkCurrentTotalLight(); //check stored current total light on EEPROM
+  checkEEPROM(); //looks for stored variables after power outage
   Serial.println("-------------------------------"); Serial.println("");
   delay(4000);
 }
 
 void loop()
 {
+  Serial.println("============================");
+  Serial.println("Screen Refresh");
+  Serial.println("============================");
   dt = clock.getDateTime(); //get the current time form the RTC
   doGeneralMath(); //all the universal calculations.
   doLightMath();  //all the lighting calcualtions
   doDoorMath(); //all the door calculations
   controlLight(); //turn the relay on and off as necisary
   controlDoor(); //open or close the door
-  Serial.println("");
-  Serial.println("");
   Serial.println("");
   Serial.println("*****************************");
   printGeneralStatus(); //display the time and stuff
