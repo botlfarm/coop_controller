@@ -10,7 +10,7 @@ int relayPin1 = 6; //define relay pin
 int relayPin2 = 5; //define relay pin
 int relayPin3 = 4; //define relay pin
 int relayPin4 = 3; //define relay pin
-int Button1Pin = 9;  //define DST button pin
+//int Button1Pin = 9;  //define DST button pin
 
 float MinLightNeeded; //total minutes of light needed
 float HoursLightNeeded; //total hours of light needed
@@ -37,10 +37,15 @@ float CloseDoorMin; //Minutes since midnight the door will close
 char CloseDoorTime[] = "00:00"; //time the door closes
 float MenuTimeout; //milaseconds of timeout for menu
 int SerialData;
+float NestBarMin; //minutes since midnight nest bars will be relsed
 //float maxChangeperday = 10; //max minutes of daylight change per day
 //float currentTotalLight;  //current amount of total light
 
 Dusk2Dawn ashford(41.9199, -72.1757, -5); //set location and utc time
+
+
+//===================================================
+//===================================================
 
 void setup()
 {
@@ -52,7 +57,7 @@ void setup()
   digitalWrite(relayPin2, HIGH);
   digitalWrite(relayPin3, HIGH);
   digitalWrite(relayPin4, HIGH);
-  pinMode(Button1Pin, INPUT_PULLUP); //set up DST button pin
+ 
 
   Serial.begin(9600); //start serial display
   clock.begin(); //Initialize DS3231
@@ -64,8 +69,11 @@ void setup()
   Serial.println("-------------------------------");
   checkEEPROM(); //looks for stored variables after power outage
   Serial.println("-------------------------------"); Serial.println("");
-  delay(4000);
+  delay(MenuTimeout);
 }
+
+//===================================================
+//===================================================
 
 void loop()
 {
@@ -79,6 +87,7 @@ void loop()
   doDoorMath(); //all the door calculations
   controlLight(); //turn the relay on and off as necisary
   controlDoor(); //open or close the door
+  controlNestBars(); //release the nest bars
   Serial.println("");
   Serial.println("*****************************");
   printGeneralStatus(); //display the time and stuff
@@ -86,6 +95,9 @@ void loop()
   delay(MenuTimeout);
   mainMenu(); //Check to see if input is coming in form serial monitor
 }
+
+//===================================================
+//===================================================
 
 void resetSerial()
 {

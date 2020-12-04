@@ -1,3 +1,5 @@
+//===================================================
+//===================================================
 void doorMenu()
 {
   printDoorStatus();
@@ -39,6 +41,10 @@ void doorMenu()
     }
   }
 }
+
+//===================================================
+//===================================================
+
 void incomingSerialOpenOffset()
 {
   Serial.println("Enter open offset requested");
@@ -66,6 +72,9 @@ void incomingSerialOpenOffset()
     }
   }
 }
+
+//===================================================
+//===================================================
 
 void incomingSerialCloseOffset()
 {
@@ -95,6 +104,9 @@ void incomingSerialCloseOffset()
   }
 }
 
+//===================================================
+//===================================================
+
 void incomingDoorMode()
 {
   DoorModeStatusToWords();
@@ -103,6 +115,7 @@ void incomingDoorMode()
   Serial.println("1-Enable automatic door mode");
   Serial.println("2-disable automatic door mode");
   Serial.println("*****************************"); Serial.println("");
+  resetSerial();
 
   if (Serial.available() > 0) // reply only when you receive data:
   {
@@ -134,6 +147,9 @@ void incomingDoorMode()
     }
   }
 }
+
+//===================================================
+//===================================================
 
 void manualDoorControl()
 {

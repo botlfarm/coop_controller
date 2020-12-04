@@ -1,3 +1,5 @@
+//===================================================
+//===================================================
 
 void doGeneralMath ()
 {
@@ -10,6 +12,9 @@ void doGeneralMath ()
   Dusk2Dawn::min2str(SunsetTime, SunsetMin); //converting Sunset minutes to actual time
 }
 
+//===================================================
+//===================================================
+
 void doLightMath()
 {
   MinNaturalLight = SunsetMin - SunriseMin; //amount of naural sunlight minutes
@@ -21,6 +26,9 @@ void doLightMath()
   Dusk2Dawn::min2str(StartLightTime, StartLightMin); //convert minutes to string
 }
 
+//===================================================
+//===================================================
+
 void doDoorMath()
 {
   OpenDoorMin = SunriseMin + OpenDoorOffset; //calculate door open time in minutes since midnight
@@ -29,6 +37,22 @@ void doDoorMath()
   CloseDoorMin = SunsetMin + CloseDoorOffset; //calculate door open time in minutes since midnight
   Dusk2Dawn::min2str(CloseDoorTime, CloseDoorMin); //convert minutes to string
 }
+
+//===================================================
+//===================================================
+
+void doNestBarMath()  //sent the nest box release time to the lesser value of open door time or start light time
+{
+  if (StartLightMin > OpenDoorMin) {
+    NestBarMin = OpenDoorMin;
+  }
+  else{
+    NestBarMin = StartLightMin;
+  }
+}
+
+//===================================================
+//===================================================
 
 void DSTStatusToWords()
 {
@@ -40,6 +64,9 @@ void DSTStatusToWords()
   }
 }
 
+//===================================================
+//===================================================
+
 void LightModeStatusToWords()
 {
   if (LightModeStatus == 1) {
@@ -50,6 +77,9 @@ void LightModeStatusToWords()
   }
 }
 
+//===================================================
+//===================================================
+
 void DoorModeStatusToWords()
 {
   if (DoorModeStatus == 1) {
@@ -59,6 +89,9 @@ void DoorModeStatusToWords()
     Serial.println ("Automatic door mode disabled");
   }
 }
+
+//===================================================
+//===================================================
 
 void DoorStatusToWords()
 {

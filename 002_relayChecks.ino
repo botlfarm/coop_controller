@@ -1,3 +1,6 @@
+//===================================================
+//===================================================
+
 void lightCheck()
 {
   Serial.println("*****************************");
@@ -19,6 +22,9 @@ void lightCheck()
   delay(2000);
 }
 
+//===================================================
+//===================================================
+
 void doorCheck()
 {
   Serial.println("*****************************");
@@ -32,6 +38,9 @@ void doorCheck()
   delay(3000);
   Serial.println("Open door for 3 seconds");
   openDoor();
+  delay(3000);
+  Serial.println("Close for 3 seconds");
+  closeDoor();
   delay(3000);
   stopDoor();
   Serial.println("Door check complete");

@@ -1,3 +1,6 @@
+//===================================================
+//===================================================
+
 void printGeneralStatus()
 {
   Serial.print("Current date: "); Serial.print(dt.year);  Serial.print("-"); Serial.print(dt.month);  Serial.print("-"); Serial.println(dt.day);
@@ -8,6 +11,9 @@ void printGeneralStatus()
   Serial.print("Natural light: "); Serial.print(HoursNaturalLight); Serial.print(" hours, or "); Serial.print (MinNaturalLight); Serial.println( " minutes");
 }
 
+//===================================================
+//===================================================
+
 void printLightStatus()
 {
   LightModeStatusToWords();
@@ -15,6 +21,9 @@ void printLightStatus()
   Serial.print("Artificial light needed: "); Serial.print(MinArtificialLight / 60); Serial.print(" hours, or "); Serial.print (MinArtificialLight); Serial.println( " minutes");
   Serial.print("Start Artifical lights: "); Serial.println(StartLightTime);
 }
+
+//===================================================
+//===================================================
 
 void printDoorStatus()
 {

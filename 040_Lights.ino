@@ -1,3 +1,6 @@
+//===================================================
+//===================================================
+
 void controlLight()
 {
  if (LightModeStatus==1)
@@ -9,6 +12,9 @@ void controlLight()
   Serial.println("Suplimental light mode disabled");
  }
 }
+
+//===================================================
+//===================================================
 
 void autoLightControlMode()
 {

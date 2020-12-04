@@ -1,3 +1,6 @@
+//===================================================
+//===================================================
+
 void checkEEPROM()
 {
   Serial.println("Getting stored data from EEPROM");
@@ -12,11 +15,17 @@ void checkEEPROM()
   checkMenuTimeout();
 }
 
+//===================================================
+//===================================================
+
 void checkDSTStatus()
 {
   DSTStatus = EEPROM.read(0);
   DSTStatusToWords();
 }
+
+//===================================================
+//===================================================
 
 void checkLightNeededStatus()
 {
@@ -25,20 +34,31 @@ void checkLightNeededStatus()
   HoursLightNeeded = MinLightNeeded / 60; //calcualte hours of light needed
 }
 
+//===================================================
+//===================================================
+
 void checkLightModeStatus()
 {
   LightModeStatus = EEPROM.read(10);
   LightModeStatusToWords();
 }
 
-/*
+//===================================================
+//===================================================
+
+
 void checkCurrentTotalLight()
 {
+  /*
   Serial.print("Current total light after restart: ");
   EEPROM.get(15, currentTotalLight);
   Serial.println(currentTotalLight);
+  */
 }
-*/
+
+
+//===================================================
+//===================================================
 
 void checkDoorModeStatus()
 {
@@ -46,11 +66,17 @@ void checkDoorModeStatus()
   DoorModeStatusToWords();
 }
 
+//===================================================
+//===================================================
+
 void checkDoorStatus()
 {
   DoorStatus = EEPROM.read(25);
   DoorStatusToWords();
 }
+
+//===================================================
+//===================================================
 
 void checkOpenDoorOffset()
 {
@@ -58,11 +84,17 @@ void checkOpenDoorOffset()
   Serial.print("Open door offset: "); Serial.print(OpenDoorOffset); Serial.println(" minutes");
 }
 
+//===================================================
+//===================================================
+
 void checkCloseDoorOffset()
 {
   EEPROM.get(35, CloseDoorOffset);
   Serial.print("Close door offset: "); Serial.print(CloseDoorOffset); Serial.println(" minutes");
 }
+
+//===================================================
+//===================================================
 
 void checkMenuTimeout()
 {

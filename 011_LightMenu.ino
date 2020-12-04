@@ -1,3 +1,5 @@
+//===================================================
+//===================================================
 void lightMenu()
 {
   printLightStatus();
@@ -30,6 +32,9 @@ void lightMenu()
   }
 }
 
+//===================================================
+//===================================================
+
 void incomingSerialLightNeeded()
 {
   Serial.print("Requested amount of total light:  "); Serial.print(HoursLightNeeded); Serial.print(" hours, or "); Serial.print (MinLightNeeded); Serial.println( " minutes");
@@ -61,6 +66,9 @@ void incomingSerialLightNeeded()
   }
 }
 
+//===================================================
+//===================================================
+
 void incomingLightMode()
 {
   LightModeStatusToWords();
@@ -83,7 +91,7 @@ void incomingLightMode()
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
       resetSerial();
     }
-    else if (SerialData == 0)
+    else if (SerialData == 2)
     {
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.println("Suplimented light mode disabled ");
