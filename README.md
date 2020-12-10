@@ -25,11 +25,13 @@ Once setup your phone is connected to the board through USB to use as the interf
 ArduinoDroid https://play.google.com/store/apps/details?id=name.antonsmirnov.android.arduinodroid2 has a usefull serial monitor.
 
 Doors
+Controlled with relay #2 and #3. These need to be wired to reverse current flow. 
 Im automatic mode you can set the open and close offset from sunrise and sunset for your doors. they will open and close at the desired time.
 In maual mode you can open, close or stop the door
 There is a snow dump option. When thisis selected the door will close for 60 seconds then reopen. Giving you time to clear snow off the door. 
 
 Lights
+Controlled with realy #1
 When suplimental light mode is enabled you can tell it how many hours of total light you want your coop to have. 
 It will calculate when to turn the lights on to reach the total amount of light you requested. 
 Note that artifical ligt will come on in the moring so all the hens are in the coop already. 
@@ -37,6 +39,7 @@ It will stay on for 20 minutes past sunrise as this is the aproxamate time in te
 If less than 20 minutes of artifical light is needed than no light will be provided. 
 
 Roosts
+Controlled with relay #4
 The cabintet latches hold the roosts in a closed position.
 The progran calculates the earlest relese time to be 2 minuts after the hens are woken up.
 If in automatic light mode it will open when the lights come on.
