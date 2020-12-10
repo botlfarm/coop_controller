@@ -13,6 +13,7 @@ Cabinet lock (for roost latch)https://www.amazon.com/gp/product/B0714DT68D/ref=p
 Springs (may be nesisary for lowering roosts) https://www.amazon.com/gp/product/B008RGAUDQ/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1
 linar actuator (door operation) https://www.amazon.com/gp/product/B07HNTPB87/ref=ppx_yo_dt_b_asin_title_o09_s00?ie=UTF8&psc=1
 DC bulbs and bulb sockets https://www.amazon.com/gp/product/B07JQ8JHF4/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1&fpw=alm
+Battery voltage monitor (hopefulyl this will be coded at some point) https://www.amazon.com/gp/product/B08LKSB2VN/ref=ppx_yo_dt_b_asin_title_o03_s00?ie=UTF8&psc=1
 
 
 This will get current sunrise and sun set times based on date and coordinate location (location is hard prograed in code)
