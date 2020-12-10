@@ -2,6 +2,7 @@
 //===================================================
 void nestBoxMenu()
 {
+  printNestBarStatus();
   Serial.println("*****************************");
   Serial.println("Nest Box Menu. Enter number in Serial Monitor");
   Serial.println("1-Manualy release nest box bars");

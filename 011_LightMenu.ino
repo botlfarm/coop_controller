@@ -37,7 +37,7 @@ void lightMenu()
 
 void incomingSerialLightNeeded()
 {
-  Serial.print("Requested amount of total light:  "); Serial.print(HoursLightNeeded); Serial.print(" hours, or "); Serial.print (MinLightNeeded); Serial.println( " minutes");
+  Serial.print("Requested amount of total light:  "); Serial.print(HoursLightNeeded); Serial.print(" hours, or "); Serial.print (MinLightNeeded,0); Serial.println( " minutes");
   Serial.println("Enter minutes of light requested");
   Serial.println("720=12h, 780=13h, 840=14h, 900=15h, 960=16h");
   resetSerial();
@@ -52,7 +52,7 @@ void incomingSerialLightNeeded()
       HoursLightNeeded = MinLightNeeded / 60; //calcualte hours of light needed
 
       Serial.println("++++++++++++++++++++++++++++++");
-      Serial.print("Changing minutes of light needed to: "); Serial.print(MinLightNeeded); Serial.print(" minutes, or "); Serial.print(HoursLightNeeded); Serial.println(" hours ");
+      Serial.print("Changing minutes of light needed to: "); Serial.print(MinLightNeeded,0); Serial.print(" minutes, or "); Serial.print(HoursLightNeeded); Serial.println(" hours ");
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
       resetSerial();
     }

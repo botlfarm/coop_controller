@@ -9,6 +9,7 @@ void doorMenu()
   Serial.println("2-Close Offset");
   Serial.println("3-Toggle Manual/Automatic");
   Serial.println("4-Manual operation");
+  Serial.println("5-Snow Dump");
   Serial.println("*****************************"); Serial.println("");
   delay(MenuTimeout);
 
@@ -31,6 +32,11 @@ void doorMenu()
     else if (SerialData == 4)
     {
       manualDoorControl();
+    }
+    else if (SerialData == 5)
+    {
+      snowDump();
+      resetSerial();
     }
     else
     {
@@ -59,7 +65,7 @@ void incomingSerialOpenOffset()
       EEPROM.put(30, OpenDoorOffset);
 
       Serial.println("++++++++++++++++++++++++++++++");
-      Serial.print("Changing open door offset from sunrise to: "); Serial.print(OpenDoorOffset); Serial.println(" minutes");
+      Serial.print("Changing open door offset from sunrise to: "); Serial.print(OpenDoorOffset,0); Serial.println(" minutes");
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
       resetSerial();
     }
@@ -90,7 +96,7 @@ void incomingSerialCloseOffset()
       EEPROM.put(35, CloseDoorOffset);
 
       Serial.println("++++++++++++++++++++++++++++++");
-      Serial.print("Changing close door offset from sunset to: "); Serial.print(CloseDoorOffset); Serial.println(" minutes");
+      Serial.print("Changing close door offset from sunset to: "); Serial.print(CloseDoorOffset,0); Serial.println(" minutes");
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
       resetSerial();
     }

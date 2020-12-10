@@ -43,6 +43,7 @@ void mainMenu()
       printGeneralStatus();
       printLightStatus();
       printDoorStatus();
+      printNestBarStatus();
       delay(MenuTimeout); //aditional timeouts for extended viewing
       resetSerial();
     }
@@ -59,6 +60,11 @@ void mainMenu()
     else if (SerialData == 24)  //manual door control menu
     {
       manualDoorControl();
+    }
+    else if (SerialData == 25)
+    {
+      snowDump();
+      resetSerial();
     }
     else
     {

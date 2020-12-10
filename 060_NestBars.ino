@@ -4,10 +4,9 @@
 
 void controlNestBars()
 {
-  if (MinSinceMid = NestBarMin) //if the current time is eqial to nest bar release time relese the nest barsbar
+  if (MinSinceMid == NestBarMin) //if the current time is eqial to nest bar release time relese the nest barsbar
   {
     releaseNestBars();
-    Serial.println("The nest bars should be released");
   }
 }
 

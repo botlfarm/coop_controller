@@ -41,14 +41,18 @@ void doDoorMath()
 //===================================================
 //===================================================
 
-void doNestBarMath()  //sent the nest box release time to the lesser value of open door time or start light time
+void doNestBarMath()  //set the nest box release time to the lesser value of open door time or start light time
 {
-  if (StartLightMin > OpenDoorMin) {
-    NestBarMin = OpenDoorMin;
+  if (LightModeStatus==1)
+  {
+    NestBarMin=min(SunriseMin-20,StartLightMin)+2;
   }
-  else{
-    NestBarMin = StartLightMin;
+  else 
+  {
+    NestBarMin=min(SunriseMin-20,OpenDoorMin)+2;
   }
+
+   Dusk2Dawn::min2str(NestBarTime, NestBarMin); //convert minutes to string
 }
 
 //===================================================

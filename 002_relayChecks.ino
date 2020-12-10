@@ -47,3 +47,22 @@ void doorCheck()
   Serial.println("*****************************"); Serial.println("");
   delay(2000);
 }
+
+//===================================================
+//===================================================
+
+
+void nestBarCheck()
+{
+  Serial.println("*****************************");
+  Serial.println("Checking if nest bars are working.");
+  delay(1000);
+  releaseNestBars();
+  delay(5000);
+  releaseNestBars();
+  delay(5000);
+  releaseNestBars();
+  Serial.println("Nest bar check complete");
+  Serial.println("*****************************"); Serial.println("");
+  delay(2000);
+}

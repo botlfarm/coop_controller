@@ -58,3 +58,20 @@ void stopDoor()
   digitalWrite(relayPin2, HIGH);
   digitalWrite(relayPin3, HIGH);
 }
+
+//===================================================
+//===================================================
+
+void snowDump()
+{
+  int count = 60;  //how many seconds  the snow dump runs for
+  while (count > 0) 
+  {
+    Serial.print("Snow dump activated. "); Serial.print(count); Serial.println(" seconds remaining");
+    closeDoor();
+    delay (1000);
+    count--;
+  }
+  Serial.println("Snow dump complete");
+  openDoor();
+}
