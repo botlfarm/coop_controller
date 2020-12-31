@@ -62,7 +62,8 @@ void incomingSerialOpenOffset()
     if (SerialData > -240 && SerialData < 240)
     {
       OpenDoorOffset = SerialData; // read the incoming byte:
-      EEPROM.put(30, OpenDoorOffset);
+      EEPROM.write(30, OpenDoorOffset);
+      EEPROM.commit();
 
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.print("Changing open door offset from sunrise to: "); Serial.print(OpenDoorOffset,0); Serial.println(" minutes");
@@ -93,7 +94,8 @@ void incomingSerialCloseOffset()
     if (SerialData > -240 && SerialData < 240)
     {
       CloseDoorOffset = SerialData; // read the incoming byte:
-      EEPROM.put(35, CloseDoorOffset);
+      EEPROM.write(35, CloseDoorOffset);
+      EEPROM.commit();
 
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.print("Changing close door offset from sunset to: "); Serial.print(CloseDoorOffset,0); Serial.println(" minutes");
@@ -131,7 +133,8 @@ void incomingDoorMode()
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.println("Automaic door mode enabled");
       DoorModeStatus = true;
-      EEPROM.update(20, DoorModeStatus);
+      EEPROM.write(20, DoorModeStatus);
+      EEPROM.commit();
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
       resetSerial();
     }
@@ -140,7 +143,8 @@ void incomingDoorMode()
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.println("Automatic door mode disabled");
       DoorModeStatus = false;
-      EEPROM.update(20, DoorModeStatus);
+      EEPROM.write(20, DoorModeStatus);
+      EEPROM.commit();
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
       resetSerial();
     }

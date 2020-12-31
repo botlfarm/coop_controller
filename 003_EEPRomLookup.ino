@@ -30,7 +30,7 @@ void checkDSTStatus()
 
 void checkLightNeededStatus()
 {
-  EEPROM.get(5, MinLightNeeded);
+  MinLightNeeded = EEPROM.read(5) * 10;
   Serial.print("Light needed after restart: "); Serial.println(MinLightNeeded,0);
   HoursLightNeeded = MinLightNeeded / 60; //calcualte hours of light needed
 }
@@ -81,7 +81,7 @@ void checkDoorStatus()
 
 void checkOpenDoorOffset()
 {
-  EEPROM.get(30, OpenDoorOffset);
+  OpenDoorOffset = EEPROM.read(30);
   Serial.print("Open door offset: "); Serial.print(OpenDoorOffset,0); Serial.println(" minutes");
 }
 
@@ -90,7 +90,7 @@ void checkOpenDoorOffset()
 
 void checkCloseDoorOffset()
 {
-  EEPROM.get(35, CloseDoorOffset);
+  CloseDoorOffset = EEPROM.read(35);
   Serial.print("Close door offset: "); Serial.print(CloseDoorOffset,0); Serial.println(" minutes");
 }
 
@@ -99,6 +99,7 @@ void checkCloseDoorOffset()
 
 void checkMenuTimeout()
 {
-  EEPROM.get(40, MenuTimeout);
-  Serial.print("Menu Timeout: "); Serial.print(MenuTimeout,0); Serial.println(" milliseconds");
+  MenuTimeoutSeconds = EEPROM.read(40);
+  MenuTimeout = MenuTimeoutSeconds * 1000;
+  Serial.print("Menu Timeout: "); Serial.print(MenuTimeoutSeconds,0); Serial.println(" seconds");
 }

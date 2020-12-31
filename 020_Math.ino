@@ -3,10 +3,11 @@
 
 void doGeneralMath ()
 {
-  MinSinceMid = dt.hour * (60) + dt.minute; //calculate current time in minutes since midnight
+  DateTime now = rtc.now();
+  MinSinceMid = now.hour() * (60) + now.minute(); //calculate current time in minutes since midnight
 
-  SunriseMin = ashford.sunrise(dt.year, dt.month, dt.day, DSTStatus); //get sunrise minutes since midnight
-  SunsetMin = ashford.sunset(dt.year, dt.month, dt.day, DSTStatus); //get sunset minutes since midnight
+  SunriseMin = ashford.sunrise(now.year(), now.month(), now.day(), DSTStatus); //get sunrise minutes since midnight
+  SunsetMin = ashford.sunset(now.year(), now.month(), now.day(), DSTStatus); //get sunset minutes since midnight
 
   Dusk2Dawn::min2str(SunriseTime, SunriseMin); //converting Sunrise minutes to actual time
   Dusk2Dawn::min2str(SunsetTime, SunsetMin); //converting Sunset minutes to actual time

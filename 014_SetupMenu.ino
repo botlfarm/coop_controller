@@ -95,11 +95,13 @@ void DSTToggle()
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.println("DST enabled");
       DSTStatus = true;
-      EEPROM.update(0, DSTStatus);
+      EEPROM.write(0, DSTStatus);
+      EEPROM.commit();
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
 
-      dt = clock.getDateTime(); //get the current time form the RTC
-      clock.setDateTime(dt.year, dt.month, dt.day, dt.hour + 1, dt.minute, dt.second);  //Set the clock
+      DateTime now = rtc.now(); //get the current time form the RTC
+      DateTime future (now + TimeSpan(0,1,0,0));
+      rtc.adjust(DateTime(now.year(), now.month(), now.day(), now.hour()+1, now.minute(), now.second()));  //Set the clock
       resetSerial();
     }
     else if (SerialData == 2)
@@ -107,11 +109,12 @@ void DSTToggle()
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.println("DST disabled ");
       DSTStatus = false;
-      EEPROM.update(0, DSTStatus);
+      EEPROM.write(0, DSTStatus);
+      EEPROM.commit();
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
 
-      dt = clock.getDateTime(); //get the current time form the RTC
-      clock.setDateTime(dt.year, dt.month, dt.day, dt.hour - 1, dt.minute, dt.second); //Set the clock
+      DateTime now = rtc.now(); //get the current time form the RTC
+      rtc.adjust(DateTime(now.year(), now.month(), now.day(), now.hour()-1, now.minute(), now.second()));  //Set the clock
       resetSerial();
     }
     else
@@ -136,26 +139,27 @@ void setLocation()
 
 void setMenuTimeout()
 {
-  Serial.print("Current menu timeout "); Serial.print(MenuTimeout); Serial.println(" milliseconds");
-  Serial.println("Enter new menu timeout in milliseconds");
+  Serial.print("Current menu timeout "); Serial.print(MenuTimeoutSeconds); Serial.println(" seconds");
+  Serial.println("Enter new menu timeout in seconds");
   resetSerial();
 
   if (Serial.available() > 0) // reply only when you receive data:
   {
     SerialData = Serial.parseInt();
-    if (SerialData > 3000  && SerialData <60000)
+    if (SerialData > 3  && SerialData <60)
     {
-      MenuTimeout = SerialData; 
-      EEPROM.put(40, MenuTimeout);
+      MenuTimeoutSeconds = SerialData; 
+      EEPROM.write(40, MenuTimeoutSeconds);
+      EEPROM.commit();
 
       Serial.println("++++++++++++++++++++++++++++++");
-      Serial.print("Changing menu timeout to: "); Serial.print(MenuTimeout); Serial.println(" milliseconds");
+      Serial.print("Changing menu timeout to: "); Serial.print(MenuTimeoutSeconds); Serial.println(" seconds");
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
       resetSerial();
     }
     else
     {
-      Serial.println("Invalid entry. Value must be between 3000 and 60000. Serial reads this");
+      Serial.println("Invalid entry. Value must be between 3 and 60. Serial reads this");
       Serial.println(SerialData);
       Serial.println("Back to main menu");
       resetSerial();

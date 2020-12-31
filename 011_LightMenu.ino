@@ -48,7 +48,8 @@ void incomingSerialLightNeeded()
     if (SerialData > 20 && SerialData < 1000)
     {
       MinLightNeeded = SerialData; // read the incoming byte:
-      EEPROM.put(5, MinLightNeeded);
+      EEPROM.write(5, MinLightNeeded / 10);
+      EEPROM.commit();
       HoursLightNeeded = MinLightNeeded / 60; //calcualte hours of light needed
 
       Serial.println("++++++++++++++++++++++++++++++");
@@ -87,7 +88,8 @@ void incomingLightMode()
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.println("Suplimneted light mode enabled");
       LightModeStatus = true;
-      EEPROM.update(10, LightModeStatus);
+      EEPROM.write(10, LightModeStatus);
+      EEPROM.commit();
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
       resetSerial();
     }
@@ -96,7 +98,8 @@ void incomingLightMode()
       Serial.println("++++++++++++++++++++++++++++++");
       Serial.println("Suplimented light mode disabled ");
       LightModeStatus = false;
-      EEPROM.update(10, LightModeStatus);
+      EEPROM.write(10, LightModeStatus);
+      EEPROM.commit();
       Serial.println("++++++++++++++++++++++++++++++"); Serial.println("");
       resetSerial();
     }

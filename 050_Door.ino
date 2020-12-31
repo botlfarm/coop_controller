@@ -36,7 +36,8 @@ void closeDoor()
   digitalWrite(relayPin2, LOW);
   digitalWrite(relayPin3, HIGH);
   DoorStatus = 0;
-  EEPROM.put(25, DoorStatus);
+  EEPROM.write(25, DoorStatus);
+  EEPROM.commit();
 }
 
 //===================================================
@@ -47,7 +48,8 @@ void openDoor()
   digitalWrite(relayPin2, HIGH);
   digitalWrite(relayPin3, LOW);
   DoorStatus = 1;
-  EEPROM.put(25, DoorStatus);
+  EEPROM.write(25, DoorStatus);
+  EEPROM.commit();
 }
 
 //===================================================

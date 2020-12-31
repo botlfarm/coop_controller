@@ -3,8 +3,9 @@
 
 void printGeneralStatus()
 {
-  Serial.print("Current date: "); Serial.print(dt.year);  Serial.print("-"); Serial.print(dt.month);  Serial.print("-"); Serial.println(dt.day);
-  Serial.print("Current time: "); Serial.print(dt.hour);  Serial.print(":"); Serial.print(dt.minute); Serial.print(":"); Serial.println(dt.second);
+  DateTime now = rtc.now();
+  Serial.print("Current date: "); Serial.print(now.year());  Serial.print("-"); Serial.print(now.month());  Serial.print("-"); Serial.println(now.day());
+  Serial.print("Current time: "); Serial.print(now.hour());  Serial.print(":"); Serial.print(now.minute()); Serial.print(":"); Serial.println(now.second());
   DSTStatusToWords();
   Serial.print("Sunrise: "); Serial.println(SunriseTime); 
   Serial.print("Sunset: "); Serial.println(SunsetTime); 
