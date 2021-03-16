@@ -19,4 +19,12 @@ void releaseNestBars()  //brefinly enabaling release mechanism
   Serial.println("Releasing nest box bars");
   delay(800);
   digitalWrite(relayPin4, HIGH);
+  delay(16000);//pause
+  digitalWrite(relayPin4, LOW);
+  delay(800);
+  digitalWrite(relayPin4, HIGH);
+  delay(16000);//pause
+  digitalWrite(relayPin4, LOW);
+  delay(800);
+  digitalWrite(relayPin4, HIGH);
 }
