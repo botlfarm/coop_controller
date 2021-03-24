@@ -17,6 +17,10 @@ int relayPin1 = 6; //define relay pin
 int relayPin2 = 5; //define relay pin
 int relayPin3 = 4; //define relay pin
 int relayPin4 = 3; //define relay pin
+int relayPin5 = 7; //define relay pin
+int relayPin6 = 8; //define relay pin
+int relayPin7 = 9; //define relay pin
+int relayPin8 = 10; //define relay pin
 
 float MinLightNeeded; //total minutes of light needed
 float HoursLightNeeded; //total hours of light needed
@@ -60,10 +64,18 @@ void setup()
   pinMode(relayPin2, OUTPUT); //set relay pin
   pinMode(relayPin3, OUTPUT); //set relay pin
   pinMode(relayPin4, OUTPUT); //set relay pin
+  pinMode(relayPin5, OUTPUT); //set relay pin
+  pinMode(relayPin6, OUTPUT); //set relay pin
+  pinMode(relayPin7, OUTPUT); //set relay pin
+  pinMode(relayPin8, OUTPUT); //set relay pin
   digitalWrite(relayPin1, HIGH);
   digitalWrite(relayPin2, HIGH);
   digitalWrite(relayPin3, HIGH);
   digitalWrite(relayPin4, HIGH);
+  digitalWrite(relayPin5, HIGH);
+  digitalWrite(relayPin6, HIGH);
+  digitalWrite(relayPin7, HIGH);
+  digitalWrite(relayPin8, HIGH);
  
 
   Serial.begin(9600); //start serial display

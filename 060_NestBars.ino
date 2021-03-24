@@ -17,14 +17,25 @@ void releaseNestBars()  //brefinly enabaling release mechanism
 {
   digitalWrite(relayPin4, LOW);
   Serial.println("Releasing nest box bars");
-  delay(800);
+  delay(1500);
   digitalWrite(relayPin4, HIGH);
-  delay(16000);//pause
+  digitalWrite(relayPin5, LOW);
+  delay(1500);
+  digitalWrite(relayPin5, HIGH);
+  digitalWrite(relayPin6, LOW);
+  delay(1500);
+  digitalWrite(relayPin6, HIGH);
+  Serial.println("Colling off solenoids");
+  delay(12000);
+  Serial.println("Releasing nest box bars again");
   digitalWrite(relayPin4, LOW);
-  delay(800);
+  delay(1500);
   digitalWrite(relayPin4, HIGH);
-  delay(16000);//pause
-  digitalWrite(relayPin4, LOW);
-  delay(800);
-  digitalWrite(relayPin4, HIGH);
+  digitalWrite(relayPin5, LOW);
+  delay(1500);
+  digitalWrite(relayPin5, HIGH);
+  digitalWrite(relayPin6, LOW);
+  delay(1500);
+  digitalWrite(relayPin6, HIGH);
+  
 }
